@@ -50,7 +50,7 @@
       "xml2js": "0.6.2",
       "node-fetch": "3.3.2",
       "@electron/universal": "3.0.1",
-      "@babel/runtime": "7.28.3"
+      "@babel/runtime": "7.28.4"
     },
     "patchedDependencies": {
       "vudio@2.1.1": "patches/vudio@2.1.1.patch",
@@ -72,6 +72,7 @@
     "@ghostery/adblocker-electron": "2.11.6",
     "@ghostery/adblocker-electron-preload": "2.11.6",
     "@hono/node-server": "1.19.1",
+    "@hono/node-ws": "1.2.0",
     "@hono/swagger-ui": "0.5.2",
     "@hono/zod-openapi": "1.1.0",
     "@hono/zod-validator": "0.7.2",
@@ -136,7 +137,7 @@
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "1.0.1",
-    "@eslint/js": "9.34.0",
+    "@eslint/js": "9.35.0",
     "@malept/flatpak-bundler": "0.4.0",
     "@playwright/test": "1.55.0",
     "@stylistic/eslint-plugin": "5.3.1",
@@ -150,13 +151,13 @@
     "builtin-modules": "5.0.0",
     "cross-env": "10.0.0",
     "del-cli": "6.0.0",
-    "discord-api-types": "0.38.22",
+    "discord-api-types": "0.38.23",
     "electron": "38.0.0",
     "electron-builder": "26.0.12",
     "electron-builder-squirrel-windows": "26.0.12",
     "electron-devtools-installer": "4.0.0",
     "electron-vite": "4.0.0",
-    "eslint": "9.34.0",
+    "eslint": "9.35.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-exports": "1.0.0-beta.5",
     "eslint-import-resolver-typescript": "4.4.4",
