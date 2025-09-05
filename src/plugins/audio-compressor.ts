@@ -2,6 +2,11 @@ import { createPlugin } from '@/utils';
 import { t } from '@/i18n';
 import { type YoutubePlayer } from '@/types/youtube-player';
 
+enum PlayerState {
+  PLAYING = 1,
+  PAUSED = 2,
+}
+
 const lazySafeTry = (...fns: (() => void)[]) => {
   for (const fn of fns) {
     try {
@@ -96,7 +101,7 @@ const audioCanPlayHandler = ({
 };
 
 const ensureAudioContextLoad = (playerApi: YoutubePlayer) => {
-  if (playerApi.getPlayerState() !== 1 || storage.lastContext) return;
+  if (playerApi.getPlayerState() !== PlayerState.PLAYING || storage.lastContext) return;
 
   playerApi.loadVideoById(
     playerApi.getPlayerResponse().videoDetails.videoId,
