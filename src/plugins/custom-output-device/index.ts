@@ -14,6 +14,7 @@ export interface CustomOutputPluginConfig {
 export default createPlugin({
   name: () => t('plugins.custom-output-device.name'),
   description: () => t('plugins.custom-output-device.description'),
+  authors: ['Benjas333'],
   restartNeeded: true,
   config: {
     enabled: false,

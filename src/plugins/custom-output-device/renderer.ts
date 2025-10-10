@@ -8,12 +8,10 @@ const updateDeviceList = async (
   context: RendererContext<CustomOutputPluginConfig>,
 ) => {
   const newDevices: Record<string, string> = {};
-  const devices = await navigator.mediaDevices
-    .enumerateDevices()
-    .then((devices) =>
-      devices.filter((device) => device.kind === 'audiooutput'),
-    );
+  const devices = await navigator.mediaDevices.enumerateDevices();
   for (const device of devices) {
+    if (device.kind !== 'audiooutput') continue;
+
     newDevices[device.deviceId] = device.label;
   }
   const options = await context.getConfig();
