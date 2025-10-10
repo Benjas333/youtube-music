@@ -1,11 +1,12 @@
+import { dev } from 'electron-is';
+
 import { createRenderer } from '@/utils';
 
 import type { YoutubePlayer } from '@/types/youtube-player';
 import type { RendererContext } from '@/types/contexts';
 import type { CustomOutputPluginConfig } from './index';
-import { dev } from 'electron-is';
 
-const pluginLoggingPrefix = "[Custom Output Device Plugin]";
+const pluginLoggingPrefix = '[Custom Output Device Plugin]';
 
 const updateDeviceList = async (
   context: RendererContext<CustomOutputPluginConfig>,
@@ -28,8 +29,21 @@ const updateSinkId = async (audioContext?: AudioContext, sinkId?: string) => {
   if (typeof audioContext.setSinkId !== 'function') return;
 
   if (dev())
-    console.debug(pluginLoggingPrefix, `Updating sinkId to: ${sinkId}`, audioContext);
-  await audioContext.setSinkId(sinkId);
+    console.debug(
+      pluginLoggingPrefix,
+      `Updating sinkId to: ${sinkId}`,
+      audioContext,
+    );
+  // await audioContext.setSinkId(sinkId);
+  try {
+    await (audioContext.setSinkId as () => Promise<void>)();
+  } catch (error) {
+    console.error(
+      pluginLoggingPrefix,
+      'setSinkId threw an error when called:',
+      error,
+    );
+  }
 };
 
 export const renderer = createRenderer<
@@ -42,7 +56,12 @@ export const renderer = createRenderer<
 >({
   async audioCanPlayHandler({ detail: { audioContext, audioSource } }) {
     if (dev())
-      console.debug(pluginLoggingPrefix, 'New audioContext and/or audioSource:', audioContext, audioSource);
+      console.debug(
+        pluginLoggingPrefix,
+        'New audioContext and/or audioSource:',
+        audioContext,
+        audioSource,
+      );
     this.audioContext = audioContext;
     await updateSinkId(audioContext, this.options!.output);
   },
@@ -69,8 +88,7 @@ export const renderer = createRenderer<
   },
 
   async onConfigChange(config) {
-    if (dev())
-      console.debug(pluginLoggingPrefix, 'Config changed:', config);
+    if (dev()) console.debug(pluginLoggingPrefix, 'Config changed:', config);
     this.options = config;
     await updateSinkId(this.audioContext, config.output);
   },
