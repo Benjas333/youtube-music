@@ -3,6 +3,9 @@ import { createRenderer } from '@/utils';
 import type { YoutubePlayer } from '@/types/youtube-player';
 import type { RendererContext } from '@/types/contexts';
 import type { CustomOutputPluginConfig } from './index';
+import { dev } from 'electron-is';
+
+const pluginLoggingPrefix = "[Custom Output Device Plugin]";
 
 const updateDeviceList = async (
   context: RendererContext<CustomOutputPluginConfig>,
@@ -24,6 +27,8 @@ const updateSinkId = async (audioContext?: AudioContext, sinkId?: string) => {
   if (!('setSinkId' in audioContext)) return;
   if (typeof audioContext.setSinkId !== 'function') return;
 
+  if (dev())
+    console.debug(pluginLoggingPrefix, `Updating sinkId to: ${sinkId}`, audioContext);
   await audioContext.setSinkId(sinkId);
 };
 
@@ -35,7 +40,9 @@ export const renderer = createRenderer<
   },
   CustomOutputPluginConfig
 >({
-  async audioCanPlayHandler({ detail: { audioContext } }) {
+  async audioCanPlayHandler({ detail: { audioContext, audioSource } }) {
+    if (dev())
+      console.debug(pluginLoggingPrefix, 'New audioContext and/or audioSource:', audioContext, audioSource);
     this.audioContext = audioContext;
     await updateSinkId(audioContext, this.options!.output);
   },
@@ -62,6 +69,8 @@ export const renderer = createRenderer<
   },
 
   async onConfigChange(config) {
+    if (dev())
+      console.debug(pluginLoggingPrefix, 'Config changed:', config);
     this.options = config;
     await updateSinkId(this.audioContext, config.output);
   },
