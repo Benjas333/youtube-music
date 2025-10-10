@@ -1,6 +1,6 @@
 name: reviewdog
 
-on: [pull_request]
+on: [pull_request_target]
 
 env:
   NODE_VERSION: "22.x"
@@ -12,8 +12,11 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      checks: write
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -32,6 +35,7 @@ jobs:
 
       - uses: reviewdog/action-eslint@v1.34.0
         with:
-          github_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review # Change reporter.
           eslint_flags: './src'
+          fail_level: error
