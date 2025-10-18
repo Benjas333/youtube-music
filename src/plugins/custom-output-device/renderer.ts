@@ -2,7 +2,7 @@ import { dev } from 'electron-is';
 
 import { createRenderer } from '@/utils';
 
-import type { YoutubePlayer } from '@/types/youtube-player';
+import type { MusicPlayer } from '@/types/music-player';
 import type { RendererContext } from '@/types/contexts';
 import type { CustomOutputPluginConfig } from './index';
 
@@ -77,14 +77,14 @@ export const renderer = createRenderer<
     await updateSinkId(audioContext, this.options!.output);
   },
 
-  async onPlayerApiReady(_: YoutubePlayer, context) {
+  async onPlayerApiReady(_: MusicPlayer, context) {
     if (dev()) console.debug(pluginLoggingPrefix, 'Plugin enabled');
     this.options = await context.getConfig();
     await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
     navigator.mediaDevices.ondevicechange = async () =>
       await updateDeviceList(context);
 
-    document.addEventListener('ytmd:audio-can-play', this.audioCanPlayHandler, {
+    document.addEventListener('peard:audio-can-play', this.audioCanPlayHandler, {
       once: true,
       passive: true,
     });
@@ -94,7 +94,7 @@ export const renderer = createRenderer<
   stop() {
     if (dev()) console.debug(pluginLoggingPrefix, 'Plugin disabled');
     document.removeEventListener(
-      'ytmd:audio-can-play',
+      'peard:audio-can-play',
       this.audioCanPlayHandler,
     );
     navigator.mediaDevices.ondevicechange = null;
