@@ -11,6 +11,7 @@ const pluginLoggingPrefix = '[Custom Output Device Plugin]';
 const updateDeviceList = async (
   context: RendererContext<CustomOutputPluginConfig>,
 ) => {
+  if (dev()) console.debug(pluginLoggingPrefix, 'Reloading devices...');
   const newDevices: Record<string, string> = {};
   const devices = await navigator.mediaDevices.enumerateDevices();
   for (const device of devices) {
@@ -18,15 +19,25 @@ const updateDeviceList = async (
 
     newDevices[device.deviceId] = device.label;
   }
+  if (dev()) console.debug(pluginLoggingPrefix, 'New devices:', newDevices);
   const options = await context.getConfig();
   options.devices = newDevices;
   context.setConfig(options);
 };
 
 const updateSinkId = async (audioContext?: AudioContext, sinkId?: string) => {
-  if (!audioContext || !sinkId) return;
-  if (!('setSinkId' in audioContext)) return;
-  if (typeof audioContext.setSinkId !== 'function') return;
+  if (!audioContext || !sinkId) {
+    if (dev()) console.error('No audioContext or sinkId');
+    return;
+  }
+  if (!('setSinkId' in audioContext)) {
+    if (dev()) console.error('setSinkId not in audioContext');
+    return;
+  }
+  if (typeof audioContext.setSinkId !== 'function') {
+    if (dev()) console.error('setSinkId is not a function (? wtf');
+    return;
+  }
 
   if (dev())
     console.debug(
@@ -67,6 +78,7 @@ export const renderer = createRenderer<
   },
 
   async onPlayerApiReady(_: YoutubePlayer, context) {
+    if (dev()) console.debug(pluginLoggingPrefix, 'Plugin enabled');
     this.options = await context.getConfig();
     await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
     navigator.mediaDevices.ondevicechange = async () =>
@@ -80,6 +92,7 @@ export const renderer = createRenderer<
   },
 
   stop() {
+    if (dev()) console.debug(pluginLoggingPrefix, 'Plugin disabled');
     document.removeEventListener(
       'ytmd:audio-can-play',
       this.audioCanPlayHandler,
