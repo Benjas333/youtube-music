@@ -422,7 +422,19 @@
       }
     },
     "custom-output-device": {
+      "backend": {
+        "dialog": {
+          "error": {
+            "buttons": {
+              "ok": "OK"
+            },
+            "message": "Something failed...",
+            "title": "Custom Output Device Error!"
+          }
+        }
+      },
       "description": "Configure a custom output media device for songs",
+      "incompatibility-warning": "THIS MAY BE BECAUSE YOUR DEVICE IS NOT COMPATIBLE WITH THE PLUGIN.",
       "menu": {
         "device-selector": "Select Device"
       },

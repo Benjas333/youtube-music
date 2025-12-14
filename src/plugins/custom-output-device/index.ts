@@ -4,6 +4,7 @@ import { t } from '@/i18n';
 import promptOptions from '@/providers/prompt-options';
 import { createPlugin } from '@/utils';
 import { renderer } from './renderer';
+import { backend } from './backend';
 
 export interface CustomOutputPluginConfig {
   enabled: boolean;
@@ -50,5 +51,6 @@ export default createPlugin({
     ];
   },
 
+  backend,
   renderer,
 });
